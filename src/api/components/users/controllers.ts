@@ -1,40 +1,17 @@
-import { Users } from "../entity/Users"
-import { getRepository } from "typeorm"
+import { Users } from './model';
+import { getRepository } from 'typeorm';
 
-export const validator = {
-    schema: {
-        body: {
-            type: 'object',
-            required: ['userid' ,'username', 'email', 'name', 'hasNotification'],
-            properties: {
-                userid: { type: 'number' },
-                username: { type: 'string' },
-                email: { type: 'string' },
-                name: { 
-                    type: 'object',
-                    required: ['firstname', 'lastname'],
-                    properties: {
-                        firstname: { type: 'string' },
-                        lastname: { type: 'string' }
-                    }
-                },
-                hasNotification: { type: 'boolean' }
-            }
-        }
-    }
-}
-
-export const index = async (req: any, reply: any) => {
+export const reqSelectAll = async (req: any, reply: any) => {
     const users = await getRepository(Users).find({ where:{ disabled: false, hidden: false }})
     return users ? reply.code(200).send(users) : reply.code(400).send(new Error('Nenhum usuário não encontrado'))
 }
 
-export const show = async (req: any, reply: any) => {
+export const reqSelect = async (req: any, reply: any) => {
     const user = await getRepository(Users).findOne({ where:{ userid: req.params.userid, disabled: false, hidden: false }})
     return user ? reply.code(200).send(user) : reply.code(400).send(new Error('Usuário não encontrado'))
 }
 
-export const store = async (req: any, reply: any) => {
+export const reqInsert = async (req: any, reply: any) => {
     const validate = await getRepository(Users).findOne({userid: req.body.userid})
     if(validate) {
         reply.code(400).send(new Error('Já existe um usuário cadastrado com o userid: '+req.body.userid))
@@ -56,7 +33,7 @@ export const store = async (req: any, reply: any) => {
     }
 }
 
-export const update = async (req: any, reply: any) => {
+export const reqUpdate = async (req: any, reply: any) => {
     const update = await getRepository(Users).update({userid: req.params.userid}, 
             {
                 username: req.body.username, 
@@ -71,8 +48,20 @@ export const update = async (req: any, reply: any) => {
     
 }
 
-export const destroy = async (req: any, reply: any) => {
+export const reqDelete = async (req: any, reply: any) => {
+    const update = await getRepository(Users).update({userid: req.params.userid}, 
+            {
+                hidden: true
+            })
+
+    return update.affected ? reply.code(200).send({message: "Usuário apagado com sucesso"}) : reply.code(400).send(new Error('Usuário não encontrado'))
+    
+}
+
+/*
+export const reqDelete = async (req: any, reply: any) => {
     const destroy = await getRepository(Users).delete({userid: req.params.userid})
 
     return destroy.affected ? reply.code(200).send({message: "Usuário apagado com sucesso"}) : reply.code(400).send(new Error('Usuário não encontrado'))
 }
+*/

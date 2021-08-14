@@ -1,18 +1,19 @@
 {
     "name": "nodejs-fastify-mysql-crud",
-    "version": "1.0.0",
-    "description": "",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "version": "0.3.0",
+    "description": "Restful Api With Node.js Fastify & MySQL",
+    "main": "dist/server.js",
+    "types": "dist/server.d.ts",
     "scripts": {
-        "dev": "nodemon src/index.ts",
-        "start": "ts-node src/index.ts",
+        "dev": "nodemon src/server.ts",
+        "start": "ts-node src/server.ts",
         "build": "tsc"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@types/busboy": "^0.2.4",
         "@types/node": "^16.4.0",
         "nodemon": "^2.0.12",
         "ts-node": "^10.1.0",
@@ -20,7 +21,10 @@
         "typescript": "^4.3.5"
     },
     "dependencies": {
+        "aws-sdk": "^2.964.0",
+        "dotenv": "^10.0.0",
         "fastify": "^3.19.1",
+        "fastify-multipart": "^4.0.7",
         "pg": "^8.6.0",
         "reflect-metadata": "^0.1.13",
         "typeorm": "^0.2.34"
